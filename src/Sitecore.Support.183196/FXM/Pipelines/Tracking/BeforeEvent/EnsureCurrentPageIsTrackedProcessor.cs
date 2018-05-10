@@ -43,7 +43,14 @@ namespace Sitecore.Support.FXM.Pipelines.Tracking.BeforeEvent
             {
                 if (!args.TrackerProvider.Current.IsActive && (args.TrackerProvider.Current.Interaction == null))
                 {
-                    args.TrackerProvider.Current.StartTracking();
+                    #region---modified part of the code to track page visit/event directly via FXM trackingManager
+                    TrackingManager trackingManager = new TrackingManager(new CorePipelineWrapper(), new TrackerProviderWrapper(), new SitecoreContextWrapper());
+                    HttpRequestBase httpRequestBase = new HttpRequestWrapper(HttpContext.Current.Request);
+                    HttpResponseBase httpResponseBase = new HttpResponseWrapper(HttpContext.Current.Response);
+                    SpoofedHttpRequestBase spoofedHttpRequestBase = new SpoofedHttpRequestBase(httpRequestBase);
+                    PageVisitParameters pageVisitParameters = new PageVisitParameters(spoofedHttpRequestBase.Url, spoofedHttpRequestBase.UrlReferrer, args.TrackerProvider.Current.Contact.ContactId.ToString());
+                    trackingManager.TrackPageVisit(httpRequestBase, httpResponseBase, pageVisitParameters);
+                    #endregion
                 }
                 if (args.TrackerProvider.Current.Interaction != null)
                 {
