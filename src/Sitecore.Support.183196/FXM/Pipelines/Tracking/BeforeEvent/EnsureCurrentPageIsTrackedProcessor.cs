@@ -48,7 +48,7 @@ namespace Sitecore.Support.FXM.Pipelines.Tracking.BeforeEvent
                     HttpRequestBase httpRequestBase = new HttpRequestWrapper(HttpContext.Current.Request);
                     HttpResponseBase httpResponseBase = new HttpResponseWrapper(HttpContext.Current.Response);
                     SpoofedHttpRequestBase spoofedHttpRequestBase = new SpoofedHttpRequestBase(httpRequestBase);
-                    PageVisitParameters pageVisitParameters = new PageVisitParameters(spoofedHttpRequestBase.Url, spoofedHttpRequestBase.UrlReferrer, args.TrackerProvider.Current.Contact.ContactId.ToString());
+                    PageVisitParameters pageVisitParameters = new PageVisitParameters(args.TrackingRequest.Url, spoofedHttpRequestBase.UrlReferrer, args.TrackerProvider.Current.Contact.ContactId.ToString());
                     trackingManager.TrackPageVisit(httpRequestBase, httpResponseBase, pageVisitParameters);
                     #endregion
                 }
